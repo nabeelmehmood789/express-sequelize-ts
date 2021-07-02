@@ -13,8 +13,8 @@ schedule.post('/',async (req,res)=>{
             return res.status(404).json('Data not found')
         }
         const bookedTimeSlots: string[] = BookTimeSlots(schedule[0].bookedSlots,req.body.from,req.body.to);
-        await Schedule.update({availableSlots:{"timeSlots":availableTimeSlots},bookedSlots:bookedTimeSlots},{where:{weekdays:req.body.weekdays}});
-        return await Schedule.findAll();
+         return await Schedule.update({availableSlots:{"timeSlots":availableTimeSlots},bookedSlots:bookedTimeSlots},{where:{weekdays:req.body.weekdays}});
+        // return res.json(200).json(await Schedule.findAll());
     } catch(err){
         return res.status(500).json(err)
     }
@@ -26,7 +26,7 @@ schedule.get('', async (req, res, next) => {
         const schedules: Schedule[] =  await Schedule.findAll();
         return res.status(200).json(schedules);
     } catch (e) {
-        next(e);
+        return next(e);
     }
 });
 

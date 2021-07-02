@@ -7,7 +7,7 @@ export class Schedule extends Model<Schedule> {
     weekdays!: string;
 
     @Column(DataType.JSON)
-    availableSlots!: object;
+    availableSlots!: any;
 
     @Column(DataType.JSON)
     bookedSlots?: string[];
