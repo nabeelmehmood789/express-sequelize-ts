@@ -1,26 +1,30 @@
 import {Schedule} from "../models/Schedule";
 import {scheduleUpdateValidation} from "../validations/scheduleUpdateValidation";
-export class scheduleServices {
+interface iScheduleServices {
+    getScheduleLists(req,res):Promise<Schedule[]>;
+    updateTimeSlot(req,res):Promise<Schedule[] | undefined>;
+    excludeTimeSlots(timeSlots:string[],from,to,res): string[] | undefined;
+    bookTimeSlots(bookedSlots,from,to):string[];
+}
+export class scheduleServices implements iScheduleServices{
 
     async getScheduleLists(req,res){
         try {
             const schedule: Schedule[] =  await Schedule.findAll();
-             res.status(500).send({
+             return res.status(500).send({
                 status:"success",
                 statusCode:200,
                 message:"",
                 data:schedule
             });
-             return;
 
         } catch(e){
-            res.status(500).send({
+            return res.status(500).send({
                 status:"error",
                 statusCode:500,
                 message:e.message,
                 data:[]
             });
-            return;
         }
     }
 
@@ -29,28 +33,27 @@ export class scheduleServices {
             scheduleUpdateValidation(req,res);
             const schedule: Schedule[] = await Schedule.findAll({attributes:["availableSlots","bookedSlots"],where:{weekdays:req.body.weekdays}});
             const availableTimeSlots   = this.excludeTimeSlots(schedule[0].availableSlots.timeSlots,req.body.from,req.body.to,res);
-            const bookedTimeSlots = this.BookTimeSlots(schedule[0].bookedSlots,req.body.from,req.body.to);
+            const bookedTimeSlots = this.bookTimeSlots(schedule[0].bookedSlots,req.body.from,req.body.to);
             if(typeof availableTimeSlots === "undefined"){
                 return;
             }
             await Schedule.update({availableSlots:{"timeSlots":availableTimeSlots},bookedSlots:bookedTimeSlots},{where:{weekdays:req.body.weekdays}});
             await this.getScheduleLists(req,res);
         } catch(e){
-             res.status(500).send({
+            return res.status(500).send({
                 status:"error",
                 statusCode:500,
                 message:e.message,
                 data:[]
             });
-             return;
         }
 
     }
 
     excludeTimeSlots = (timeSlots:string[],from,to,res) =>{
 
-        const busySlots: string[] = [];
-        if(typeof timeSlots === "undefined"){
+        const userSelectedSlots: string[] = [];
+        if(!timeSlots){
             res.send({
                 status:"error",
                 statusCode:422,
@@ -72,22 +75,27 @@ export class scheduleServices {
         }
         let freeTimeSlots: string[] = [];
         if(startTimeIndex > endTimeIndex){
-            res.status(422).send({
-                status:"error",
-                statusCode:422,
-                message:"Start time must be less than end time",
-                data:[]
-            });
-            return;
-        } else {
-            for(let startTimeSlot:number = startTimeIndex; startTimeSlot <= endTimeIndex; startTimeSlot++){
-                busySlots.push(timeSlots[startTimeSlot]);
+            console.log("START TIME INDEX",startTimeIndex);
+            console.log("END TIME INDEX",endTimeIndex)
+            for(let startTimeSlot:number = startTimeIndex; startTimeSlot < timeSlots.length; startTimeSlot++){
+                userSelectedSlots.push(timeSlots[startTimeSlot]);
             }
-            freeTimeSlots = timeSlots.filter((timeSlot) => !busySlots.includes(timeSlot));
+            for(let endTimeSlot:number = endTimeIndex - 1; endTimeSlot >= 0; endTimeSlot--){
+                console.log(endTimeIndex)
+                userSelectedSlots.push(timeSlots[endTimeSlot]);
+            }
+            console.log(userSelectedSlots);
+            freeTimeSlots = timeSlots.filter((timeSlot) => !userSelectedSlots.includes(timeSlot));
+
+        } else {
+            for(let startTimeSlot:number = startTimeIndex; startTimeSlot < endTimeIndex; startTimeSlot++){
+                userSelectedSlots.push(timeSlots[startTimeSlot]);
+            }
+            freeTimeSlots = timeSlots.filter((timeSlot) => !userSelectedSlots.includes(timeSlot));
         }
         return freeTimeSlots;
     }
-     BookTimeSlots = (bookedSlots,from,to) => {
+    bookTimeSlots = (bookedSlots,from,to) => {
         const  busySlots = (bookedSlots != null ? bookedSlots : []);
         busySlots.push(`${from}-${to}`);
         return busySlots;
@@ -95,3 +103,4 @@ export class scheduleServices {
     }
 
 }
+

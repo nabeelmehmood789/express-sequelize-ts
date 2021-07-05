@@ -1,6 +1,6 @@
 'use strict';
-const weekDays = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-const timeFormat = `{"timeSlots":[
+const WEEK_DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const TIME_FORMAT = `{"timeSlots":[
   "12:00 AM",
   "01:00 AM",
   "02:00 AM",
@@ -26,17 +26,17 @@ const timeFormat = `{"timeSlots":[
   "10:00 PM",
   "11:00 PM"
 ]}`
-const createdAt  = new Date();
-const updatedAt  = new Date();
-const bookedSlots  = null;
+const CREATED_AT  = new Date();
+const UPDATED_AT  = new Date();
+const BOOKED_SLOTS  = null;
 const schedules = [];
 weekDays.forEach((weekDay)=>{
     schedules.push({
-        weekdays:weekDay,
-        availableSlots:`${timeFormat}`,
-        bookedSlots,
-        createdAt,
-        updatedAt
+        weekdays:WEEK_DAYS,
+        availableSlots:`${TIME_FORMAT}`,
+        bookedSlots:BOOKED_SLOTS,
+        createdAt:CREATED_AT,
+        updatedAt:UPDATED_AT
     })
 });
 module.exports = {

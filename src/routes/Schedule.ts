@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import {scheduleController}  from "../controllers/scheduleController";
-let scheduleObject = new scheduleController();
+const scheduleObject = new scheduleController();
 export const schedule = Router();
 
 schedule.get('', (req,res)=>scheduleObject.scheduleLists(req,res));
