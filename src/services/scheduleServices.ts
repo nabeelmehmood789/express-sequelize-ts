@@ -86,7 +86,7 @@ export class scheduleServices {
             freeTimeSlots = timeSlots.filter((timeSlot) => !busySlots.includes(timeSlot));
         }
         return freeTimeSlots;
-}
+    }
      BookTimeSlots = (bookedSlots,from,to) => {
         const  busySlots = (bookedSlots != null ? bookedSlots : []);
         busySlots.push(`${from}-${to}`);
@@ -94,7 +94,4 @@ export class scheduleServices {
 
     }
 
-    checkTimeSlotsUndefined(timeSlots){
-
-    }
 }

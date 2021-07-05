@@ -1,5 +1,8 @@
 import {Model, Column, Table, CreatedAt, UpdatedAt, DataType} from "sequelize-typescript";
 
+interface iAvailableSLots {
+    timeSlots: string[]
+}
 @Table
 export class Schedule extends Model<Schedule> {
 
@@ -7,7 +10,7 @@ export class Schedule extends Model<Schedule> {
     weekdays!: string;
 
     @Column(DataType.JSON)
-    availableSlots!: any;
+    availableSlots!: iAvailableSLots;
 
     @Column(DataType.JSON)
     bookedSlots?: string[];
