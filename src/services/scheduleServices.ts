@@ -5,6 +5,7 @@ interface iScheduleServices {
     updateTimeSlot(req,res):Promise<Schedule[] | undefined>;
     excludeTimeSlots(timeSlots:string[],from,to,res): string[] | undefined;
     bookTimeSlots(bookedSlots,from,to):string[];
+    fetchEndTimeSlot(req,res):Promise<Schedule[]>
 }
 export class scheduleServices implements iScheduleServices{
 
@@ -101,6 +102,12 @@ export class scheduleServices implements iScheduleServices{
         return busySlots;
 
     }
+    fetchEndTimeSlot(req,res){
+        const schedule: Schedule[] = await Schedule.findAll({attributes:["availableSlots","bookedSlots"],where:{weekdays:req.body.weekdays}});
+        return schedule;
+    }
+
+
 
 }
 

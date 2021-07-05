@@ -5,3 +5,4 @@ export const schedule = Router();
 
 schedule.get('', (req,res)=>scheduleObject.scheduleLists(req,res));
 schedule.post('/',(req,res)=>scheduleObject.updateSchedule(req,res));
+schedule.get('/:startTimeSlot',(req,res)=>scheduleObject.fetchEndTimeSlot(req,res));
