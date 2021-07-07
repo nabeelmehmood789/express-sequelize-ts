@@ -30,9 +30,9 @@ const CREATED_AT  = new Date();
 const UPDATED_AT  = new Date();
 const BOOKED_SLOTS  = null;
 const schedules = [];
-weekDays.forEach((weekDay)=>{
+WEEK_DAYS.forEach((weekDay)=>{
     schedules.push({
-        weekdays:WEEK_DAYS,
+        weekdays:weekDay,
         availableSlots:`${TIME_FORMAT}`,
         bookedSlots:BOOKED_SLOTS,
         createdAt:CREATED_AT,
