@@ -1,21 +1,23 @@
 import {scheduleServices} from "../services/scheduleServices";
-import {Schedule} from "../models/Schedule";
+import {iScheduleLists} from "../interfaces/interfaces";
+
 interface ischeduleController {
-    scheduleLists(req: Express.Request,res:Express.Response):Promise<Schedule[]>;
-    updateSchedule(req: Express.Request,res:Express.Response):Promise<Schedule[] | undefined>;
-    fetchEndTimeSlot(req: Express.Request,res:Express.Response);
+    scheduleLists():Promise<iScheduleLists>;
+    updateSchedule(req: Express.Request):Promise<iScheduleLists>;
+    fetchEndTimeSlot(req: Express.Request):Promise<iScheduleLists>;
 }
+
 const scheduleServiceObject = new scheduleServices();
 export class scheduleController implements ischeduleController{
 
-    scheduleLists(req: Express.Request,res:Express.Response){
-       return scheduleServiceObject.getScheduleLists(req,res);
+    scheduleLists(){
+       return scheduleServiceObject.getScheduleLists();
     }
 
-    updateSchedule(req: Express.Request,res:Express.Response){
-        return  scheduleServiceObject.updateTimeSlot(req,res);
+    updateSchedule(req: Express.Request){
+        return  scheduleServiceObject.updateTimeSlots(req);
     }
-    fetchEndTimeSlot(req:Express.Request,res:Express.Response){
-        return scheduleServiceObject.fetchEndTimeSlot(req,res);
+    fetchEndTimeSlot(req:Express.Request){
+        return scheduleServiceObject.fetchEndTimeSlot(req);
     }
 }

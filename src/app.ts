@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import {schedule} from "./routes/Schedule";
+import {scheduleRoute} from "./routes/schedule.route";
 import {Express} from "express";
 
 export const app : Express = express();
@@ -12,4 +12,4 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json({limit: '5mb'}));
 
 
-app.use('/schedule',schedule)
+app.use('/schedule',scheduleRoute)
