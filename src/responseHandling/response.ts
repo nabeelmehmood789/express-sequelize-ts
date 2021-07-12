@@ -1,6 +1,16 @@
-export const handleResponse = (err, res) => {
-    const { statusCode, message, status, data } = err;
-    res.header("Content-Type",'application/json');
+import {responseHandle} from "../interfaces/interfaces";
+
+export const handleResponse = (dataObject:responseHandle, res):void => {
+    const { statusCode, message, status, data } = dataObject;
+    if(statusCode != 200){
+        res.status(statusCode).json({
+            status,
+            statusCode,
+            message,
+            data
+        });
+        return;
+    }
     res.status(statusCode).json({
         status,
         statusCode,
